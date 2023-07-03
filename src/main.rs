@@ -99,7 +99,7 @@ fn select_random_bit(v: u64, rng: &mut rand::rngs::ThreadRng) -> usize {
     d = (c + (c >> 8)) & (!0u64)/0x101;
     t = (d >> 32) + (d >> 48);
     // Now do branchless select!                                                
-    let count: u64 = ((((b + (b >> 4)) as u128 & 0xF0F0F0F0F0F0F0Fu128) * 0x101010101010101u128) & ((1<<64)-1)) as u64 >> 56;
+    let count: u64 = ((b + (b >> 4)) & 0xF0F0F0F0F0F0F0Fu64).wrapping_mul(0x101010101010101u64) >> 56;
     let mut r: u64 = 2;//1+rng.gen_range(0..count); //The input value; the rank of the bit to select.
     s  = 64;
     s -= ((t - r) & 256) >> 3; r -= t & ((t - r) >> 8);
